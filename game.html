@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Find the ball</title>
+
+<!-- zimjs.com - JavaScript Canvas Framework -->
+<script type="module">
+
+import zim from "https://zimjs.org/cdn/017/zim";
+
+const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png","icon4.png","icon5.png","icon6.png","exit1.png","exit2.png"];
+const path = "assets/";
+// See Docs under Frame for FIT, FILL, FULL, and TAG
+new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
+function ready() {
+  part1();
+
+    // given F (Frame), S (Stage), W (width), H (height)
+    // put code here
+//part1- start page
+// Part1 - Start Page
+function addBackground(container) {
+        // 添加背景到容器
+        new Rectangle({
+            width: W,
+            height: H,
+            color: "rgba(160, 153, 199, 1)"
+        }).addTo(container);
+
+        // 添加背景图片
+        new Pic("bg.png").mov(0, 0).sca(0.256).addTo(container);
+    }
+
+function part1() {
+    const container = new Container().addTo(); 
+        // 创建一个大的容器
+        addBackground(container);
+        
+        // 添加标题到容器
+        new Label({
+            text: "FIND THE BALL",
+            size: 100,
+            font: "pixel.ttf",
+            color: "red",
+            align: "center"
+        }).center(container).mov(0, -200).addTo(container);
+
+        // 插入猫的图片到容器
+        new Pic("assets/cat.png").pos(90, 120).sca(0.7).addTo(container);
+
+        // 添加红色小球到容器
+        const redBall = new Circle(20, "red").pos(700, 450).addTo(container).drag();
+
+        // 创建按钮的容器
+        const buttonContainer = new Container().pos(360, 550).addTo(container);
+
+        // 按钮矩形
+        const buttonRect = new Rectangle({
+            width: 300,
+            height: 100,
+            color: "white",
+            borderWidth: 4,
+            borderColor: "black",
+            corner: 10,
+        }).addTo(buttonContainer);
+
+        // 按钮文字
+        const startLabel = new Label({
+            text: "START",
+            size: 50,
+            font: "pixel.ttf",
+            color: "black",
+        }).center(buttonRect).addTo(buttonContainer);
+
+        // 按钮交互事件
+        buttonContainer.on("mouseover", () => {
+            buttonContainer.animate({
+                props: { scale: 1.1 },
+                time: 0.2,
+                ease: "quadOut",
+            });
+        });
+
+        buttonContainer.on("mouseout", () => {
+            buttonContainer.animate({
+                props: { scale: 1 },
+                time: 0.2,
+                ease: "quadIn",
+            });
+        });
+
+        
+   
+
+    buttonContainer.on("click", () => {
+                container.animate({
+                    props: { alpha: 0 },
+                    call: () => {
+                        container.removeFrom();
+
+                       part2();
+                    },
+                });
+            });
+   
+    }              
+             
+    
+    //part2- game page
+    function part2(){
+        const container = new Container().addTo();
+        addBackground(container);
+    }
+ 
+} // end ready
+
+</script>
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+</head>
+<body></body>
+</html>
