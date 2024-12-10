@@ -33,6 +33,117 @@ function addBackground(container) {
         new Pic("bg.png").mov(0, 0).sca(0.256).addTo(container);
     }
 
+function addDesk(container){
+        const containerDesk = new Container().addTo(container);
+        //add icons
+
+        //add sticker1
+        const title1 = new Container().addTo(containerDesk);
+        const sticker1 = new Rectangle({
+            width: 350,
+            height: 120,
+            color: "rgba(255, 255, 165, 1)",
+        }).pos(340, 170).addTo(title1);      
+        new Label({
+            text: "// Welcome To the game\n// My friend.\n// Please read the game rule:",
+            size: 23,
+            color: "black",
+            font: "pixel.ttf",
+            align: "left"
+        }).center(title1).addTo(title1);
+        title1.on("mouseover", () => {
+            title1.animate({
+                props: { scale: 1.02 },
+                time: 0.2,
+                ease: "bounceOut",
+            });
+        });
+
+        title1.on("mouseout", () => {
+            title1.animate({
+                props: { scale: 1 },
+                time: 0.2,
+                ease: "bounceIn",
+            });
+        });
+
+        //add sticker2
+        const title2 = new Container().addTo(containerDesk);       
+        const sticker2 = new Rectangle({
+            width: 540,
+            height: 170,
+            color: "rgba(165, 255, 217, 1)",
+        }).pos(440, 340).addTo(title2);
+        new Label({
+            text: "you are the owner of the cat.\nhelp your cat find her  red ball...\nand if you do not, she will attack your computer!!!",    
+            size: 20,
+            color: "black",
+            font: "pixel.ttf",
+            align: "left",
+            lineHeight: 30
+        }).center(title2).addTo(title2)
+        title2.on("mouseover", () => {
+            title2.animate({
+                props: { scale: 1.02 },
+                time: 0.2,
+                ease: "bounceOut",
+            });
+        });
+
+        title2.on("mouseout", () => {
+            title2.animate({
+                props: { scale: 1 },
+                time: 0.2,
+                ease: "bounceIn",
+            });
+        });
+
+        const title3 = new Label({
+            text: "Are you ready?",
+            size: 20,
+            color: "black",
+            font: "pixel.ttf",
+            align: "left",
+            lineHeight: 30
+            }).pos(300, 580).addTo(containerDesk)
+        title3.on("mouseover", function() {
+        title3.color = "purple";
+        })
+        title3.on("mouseout", function() {
+        title3.color = "black";
+        });
+
+        const title4 = new Label({
+        text: "Click some icons to start finding...",
+        size: 22,
+        color: "black",
+        font: "pixel.ttf",
+        align: "left",
+        lineHeight: 30
+        }).pos(450, 640).addTo(containerDesk)
+    title4.on("mouseover", function() {
+            title4.color = "blue";
+        })
+        title4.on("mouseout", function() {
+            title4.color = "black";
+        });
+}
+
+function addIcon(container){
+ //left side
+        const icon1 = new Pic("icon6.png").pos(80, 100).addTo(container).sca(0.04);
+        const icon2 = new Pic("icon1.png").pos(80, 220).addTo(container).sca(0.04);
+        const icon3 = new Pic("icon7.png").pos(80, 350).addTo(container).sca(0.04);
+        const icon4 = new Pic("icon2.png").pos(100, 470).addTo(container).sca(0.04);
+        const icon5 = new Pic("icon8.png").pos(180, 570).addTo(container).sca(0.05);
+        const icon6 = new Pic("icon3.png").pos(240, 120).addTo(container).sca(0.04);
+        const icon7 = new Pic("icon3.png").pos(200, 280).addTo(container).sca(0.04);
+        //right side
+        const icon8 = new Pic("icon3.png").pos(800, 90).addTo(container).sca(0.04);
+        const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
+        const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
+}
+//part1
 function part1() {
     const container = new Container().addTo(); 
         //add big container
@@ -110,8 +221,8 @@ function part1() {
     function part2(){
         const container = new Container().addTo();
         addBackground(container);
-
-        //add icons
+        addDesk(container);
+        
         //left side
         const icon1 = new Pic("icon6.png").pos(80, 100).addTo(container).sca(0.04);
         const icon2 = new Pic("icon1.png").pos(80, 220).addTo(container).sca(0.04);
@@ -124,59 +235,93 @@ function part1() {
         const icon8 = new Pic("icon3.png").pos(800, 90).addTo(container).sca(0.04);
         const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
-
-        //add sticker1
-        const sticker1 = new Rectangle({
-            width: 350,
-            height: 120,
-            color: "rgba(255, 255, 165, 1)",
-        }).pos(340, 170).addTo(container);
-
         
+        //click icon
+        icon9.on("click", () => {          
+                part3();
+        });
+    }
+
+function part3(){
+    const container = new Container().addTo();
+    addBackground(container);
+    addIcon(container);
+
+    const backgroundF = new Pic("red.png").pos(140,200).addTo(container).sca(.3);
+    new Label({
+        text: "What is the color of the ball?",
+        size: 20,
+        color: white,
+        font: "pixel.ttf",
+        align: "left",
+        lineHeight: 30
+    }).pos(380,680).addTo(container)
+
+    // start the game
+    // const correctSequence = ["R", "E", "D"];
+    // let userSequence = [];
+
+    //create letters container
+    const lettersContainer = new Container().addTo()
+//  // 定义字母位置
+//     const R = new Label({
+//     text: "R",
+//     size: 20,
+//     color: "black",
+//     font: "pixel.ttf",
+//     align: "center"
+// }).pos(410, 420).addTo(lettersContainer).sca(1.6)
+ 
+// const E = new Label({
+//     text: "E",
+//     size: 20,
+//     color: "black",
+//     font: "pixel.ttf",
+//     align: "center"
+// }).pos(365, 420).addTo(lettersContainer).sca(1.6)
+
+// const D = new Label({
+//     text: "D",
+//     size: 20,
+//     color: "black",
+//     font: "pixel.ttf",
+//     align: "center"
+// }).pos(375, 467).addTo(lettersContainer).sca(1.6)
+
+// 定义键盘布局
+const keyboardLayout = [
+    { row: 0, keys: "QWERTYUIOP", startX: 267, startY: 420 },
+    { row: 1, keys: "ASDFGHJKL", startX: 280, startY: 468 },
+    { row: 2, keys: "ZXCVBNM", startX: 303, startY: 514}
+];
+
+// 每个键的大小和间距
+const keyWidth = 50;
+const keyHeight = 50;
+const keySpacing = -2.9;
+
+
+
+// 遍历键盘布局生成字母
+keyboardLayout.forEach(layout => {
+    layout.keys.split("").forEach((char, index) => {
+        // 计算字母位置
+        const x = layout.startX + index * (keyWidth + keySpacing);
+        const y = layout.startY;
+
+        // 创建字母
         new Label({
-            text: "// Welcome To the game\n// My friend.\n// Please read the game rule:",
-            size: 23,
-            color: "black",
-            font: "pixel.ttf",
-            align: "left"
-        }).center(sticker1).addTo(sticker1);
-
-
-        //add sticker2
-        const sticker2 = new Rectangle({
-            width: 540,
-            height: 170,
-            color: "rgba(165, 255, 217, 1)",
-        }).pos(440, 340).addTo(container);
-
-        new Label({
-            text: "you are the owner of the cat.\nhelp your cat find her  red ball...\nand if you do not, she will attack your computer!!!",    
+            text: char,
             size: 20,
             color: "black",
             font: "pixel.ttf",
-            align: "left",
-            lineHeight: 30
-        }).center(sticker2).addTo(sticker2)
-
-
-new Label({
-    text: "Are you ready?",
-    size: 20,
-    color: "black",
-    font: "pixel.ttf",
-    align: "left",
-    lineHeight: 30
-}).pos(300, 580).addTo(sticker2)
-
-
-new Label({
-    text: "Click some icons to start finding...",
-    size: 22,
-    color: "black",
-    font: "pixel.ttf",
-    align: "left",
-    lineHeight: 30
-}).pos(450, 640).addTo(sticker2)
+            align: "center"
+        })
+            .pos(x, y)
+            .addTo(lettersContainer)
+            .sca(1.6); 
+    });
+});
 
 
 
@@ -187,10 +332,59 @@ new Label({
 
 
 
-}
 
 
-function part3(){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
  
