@@ -9,7 +9,8 @@
 
 import zim from "https://zimjs.org/cdn/017/zim";
 
-const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png","icon4.png","icon5.png","icon6.png","exit1.png","exit2.png"];
+const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png",
+"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png"];
 const path = "assets/";
 // See Docs under Frame for FIT, FILL, FULL, and TAG
 new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
@@ -21,23 +22,23 @@ function ready() {
 //part1- start page
 // Part1 - Start Page
 function addBackground(container) {
-        // 添加背景到容器
+        //add background
         new Rectangle({
             width: W,
             height: H,
             color: "rgba(160, 153, 199, 1)"
         }).addTo(container);
 
-        // 添加背景图片
+        //add background image
         new Pic("bg.png").mov(0, 0).sca(0.256).addTo(container);
     }
 
 function part1() {
     const container = new Container().addTo(); 
-        // 创建一个大的容器
+        //add big container
         addBackground(container);
         
-        // 添加标题到容器
+        //add title
         new Label({
             text: "FIND THE BALL",
             size: 100,
@@ -46,16 +47,16 @@ function part1() {
             align: "center"
         }).center(container).mov(0, -200).addTo(container);
 
-        // 插入猫的图片到容器
+        //add cat image
         new Pic("assets/cat.png").pos(90, 120).sca(0.7).addTo(container);
 
-        // 添加红色小球到容器
+        //add red ball
         const redBall = new Circle(20, "red").pos(700, 450).addTo(container).drag();
 
-        // 创建按钮的容器
+        //add button container
         const buttonContainer = new Container().pos(360, 550).addTo(container);
 
-        // 按钮矩形
+        //add button rectangle
         const buttonRect = new Rectangle({
             width: 300,
             height: 100,
@@ -65,7 +66,7 @@ function part1() {
             corner: 10,
         }).addTo(buttonContainer);
 
-        // 按钮文字
+        //add button text
         const startLabel = new Label({
             text: "START",
             size: 50,
@@ -73,7 +74,7 @@ function part1() {
             color: "black",
         }).center(buttonRect).addTo(buttonContainer);
 
-        // 按钮交互事件
+        //add button interaction event
         buttonContainer.on("mouseover", () => {
             buttonContainer.animate({
                 props: { scale: 1.1 },
@@ -90,9 +91,7 @@ function part1() {
             });
         });
 
-        
-   
-
+     
     buttonContainer.on("click", () => {
                 container.animate({
                     props: { alpha: 0 },
@@ -111,6 +110,84 @@ function part1() {
     function part2(){
         const container = new Container().addTo();
         addBackground(container);
+
+        //add icons
+        //left side
+        const icon1 = new Pic("icon6.png").pos(80, 100).addTo(container).sca(0.04);
+        const icon2 = new Pic("icon1.png").pos(80, 220).addTo(container).sca(0.04);
+        const icon3 = new Pic("icon7.png").pos(80, 350).addTo(container).sca(0.04);
+        const icon4 = new Pic("icon2.png").pos(100, 470).addTo(container).sca(0.04);
+        const icon5 = new Pic("icon8.png").pos(180, 570).addTo(container).sca(0.05);
+        const icon6 = new Pic("icon3.png").pos(240, 120).addTo(container).sca(0.04);
+        const icon7 = new Pic("icon3.png").pos(200, 280).addTo(container).sca(0.04);
+
+        //right side
+        const icon8 = new Pic("icon3.png").pos(800, 90).addTo(container).sca(0.04);
+        const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
+        const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
+
+        //add sticker1
+        const sticker1 = new Rectangle({
+            width: 350,
+            height: 120,
+            color: "rgba(255, 255, 165, 1)",
+        }).pos(340, 170).addTo(container);
+
+        
+        new Label({
+            text: "// Welcome To the game\n// My friend.\n// Please read the game rule:",
+            size: 23,
+            color: "black",
+            font: "pixel.ttf",
+            align: "left"
+        }).center(sticker1).addTo(sticker1);
+
+
+        //add sticker2
+        const sticker2 = new Rectangle({
+            width: 540,
+            height: 170,
+            color: "rgba(165, 255, 217, 1)",
+        }).pos(440, 340).addTo(container);
+
+        new Label({
+            text: "you are the owner of the cat.\nhelp your cat find her  red ball...\nand if you do not, she will attack your computer!!!",    
+            size: 20,
+            color: "black",
+            font: "pixel.ttf",
+            align: "left",
+            lineHeight: 30
+        }).center(sticker2).addTo(sticker2)
+
+
+new Label({
+    text: "Are you ready?",
+    size: 20,
+    color: "black",
+    font: "pixel.ttf",
+    align: "left",
+    lineHeight: 30
+}).pos(300, 580).addTo(sticker2)
+
+
+new Label({
+    text: "Click some icons to start finding...",
+    size: 22,
+    color: "black",
+    font: "pixel.ttf",
+    align: "left",
+    lineHeight: 30
+}).pos(450, 640).addTo(sticker2)
+
+
+
+
+
+
+
+
+
+
     }
  
 } // end ready
