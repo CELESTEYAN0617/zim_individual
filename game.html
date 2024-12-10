@@ -257,59 +257,32 @@ function part3(){
         lineHeight: 30
     }).pos(380,680).addTo(container)
 
-    // start the game
-    // const correctSequence = ["R", "E", "D"];
-    // let userSequence = [];
+
 
     //create letters container
     const lettersContainer = new Container().addTo()
-//  // 定义字母位置
-//     const R = new Label({
-//     text: "R",
-//     size: 20,
-//     color: "black",
-//     font: "pixel.ttf",
-//     align: "center"
-// }).pos(410, 420).addTo(lettersContainer).sca(1.6)
- 
-// const E = new Label({
-//     text: "E",
-//     size: 20,
-//     color: "black",
-//     font: "pixel.ttf",
-//     align: "center"
-// }).pos(365, 420).addTo(lettersContainer).sca(1.6)
 
-// const D = new Label({
-//     text: "D",
-//     size: 20,
-//     color: "black",
-//     font: "pixel.ttf",
-//     align: "center"
-// }).pos(375, 467).addTo(lettersContainer).sca(1.6)
 
-// 定义键盘布局
+// define keyboard layout
 const keyboardLayout = [
     { row: 0, keys: "QWERTYUIOP", startX: 267, startY: 420 },
     { row: 1, keys: "ASDFGHJKL", startX: 280, startY: 468 },
     { row: 2, keys: "ZXCVBNM", startX: 303, startY: 514}
 ];
 
-// 每个键的大小和间距
+// space and key size
 const keyWidth = 50;
 const keyHeight = 50;
 const keySpacing = -2.9;
 
-
-
-// 遍历键盘布局生成字母
+// generate letters
 keyboardLayout.forEach(layout => {
     layout.keys.split("").forEach((char, index) => {
-        // 计算字母位置
+        // calculate letter position
         const x = layout.startX + index * (keyWidth + keySpacing);
         const y = layout.startY;
 
-        // 创建字母
+        // create letter
         new Label({
             text: char,
             size: 20,
@@ -323,71 +296,125 @@ keyboardLayout.forEach(layout => {
     });
 });
 
+  // typingscreen
+  const displayScreen = new Rectangle({
+        width: 540,
+        height: 67,
+        color: "rgba(255, 255, 255, 0.1)", 
+        borderColor: "#000",
+        borderWidth: 2
+    }).pos(250, 270).addTo(container);
 
+ // active display
+ const displayLabel = new Label({
+        text: "", 
+        size: 40,
+        color: "red",
+        font: "pixel.ttf",
+        align: "left"
+    }).pos(253, 285).addTo(displayScreen); 
 
+// correct sequence
+const correctSequence = "RED";
+ // current display
+ let currentDisplay = "";
 
+ 
+ keyboardLayout.forEach(layout => {
+        layout.keys.split("").forEach((char, index) => {
+           
+            const x = layout.startX + index * 47; 
+            const y = layout.startY;
 
+            // create button
+            const button = new Button({
+                label: char,
+                width: 50,
+                height: 50,
+                backgroundColor: "#c7a7c7",            
+                borderColor: "#fff",
+                corner: 5,
+                align: "center"
+            }).pos(x-14, y-3).addTo(container).alp(0.01);
 
+            // click event
+            button.on("click", () => {
+                zog(`Clicked: ${char}`);
 
+                // add the clicked letter to the display text
+                currentDisplay += char;
+                displayLabel.text = currentDisplay; // update the display text
+            });
+        });
+    });
 
+    new Label({
+        text: "Enter",
+        size: 24,
+        color: black,
+        font: "pixel.ttf",
+        align: "center"
+    }).pos(785, 468).addTo(container);
+// create enter button
+const enterButton = new Button({
+        width: 80,
+        height: 41,
+        color: white,
+        corner: 5,
+        align: "center"
+    }).pos(780, 460).addTo(container).alp(0.01);
 
+    // Enter event
+    enterButton.on("click", () => {
+    if (currentDisplay === correctSequence) {
+            // success
+            const successLabel = new Label({
+                text: "Success! Next level...",
+                size: 30,
+                color: white,
+                font: "pixel.ttf",
+                align: "center"
+            }).addTo(displayScreen).pos(100, 20);
 
+            timeout(.5, ()=>{
+                successLabel.removeFrom();
+                part4();
+            });
+           
 
+    } else {
+            // wrong
+            const wrongLabel = new Label({
+                text: "Wrong! Please Try Again!",
+                size: 30,
+                color: "red",
+                font: "pixel.ttf",
+                align: "center"
+            }).addTo(displayScreen).pos(100, 20);
 
+            timeout(.5, ()=>{
+                wrongLabel.removeFrom();
+            });
+            // clear input
+            currentDisplay = "";
+            displayLabel.text = currentDisplay;
+        }
+    }); 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            
 }
  
+
+//part4
+function part4(){
+
+
+
+
+
+
+
+}   
 } // end ready
 
 </script>
