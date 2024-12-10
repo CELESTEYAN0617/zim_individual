@@ -10,7 +10,7 @@
 import zim from "https://zimjs.org/cdn/017/zim";
 
 const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png",
-"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png"];
+"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png","ball.png","right-arrow.png"];
 const path = "assets/";
 // See Docs under Frame for FIT, FILL, FULL, and TAG
 new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
@@ -367,21 +367,38 @@ const enterButton = new Button({
     // Enter event
     enterButton.on("click", () => {
     if (currentDisplay === correctSequence) {
-            // success
-            const successLabel = new Label({
-                text: "Success! Next level...",
-                size: 30,
-                color: white,
-                font: "pixel.ttf",
-                align: "center"
-            }).addTo(displayScreen).pos(100, 20);
-
-            timeout(.5, ()=>{
-                successLabel.removeFrom();
-                part4();
-            });
            
+            const overlayContainer = new Container().addTo(); // 添加到主舞台
+        // add a dark overlay
+            const darkOverlay = new Rectangle({
+            width: container.width, 
+            height: container.height,
+            color: "black",
+            alpha: 0 
+        }).addTo(overlayContainer);
 
+        darkOverlay.animate({
+            props: { alpha: 0.7 }, 
+            time: 1.5, 
+            });
+
+        // showing the ball
+        const ball = new Pic("ball.png").pos(290, 180).sca(.8).addTo(overlayContainer);
+        const rightArrow = new Pic("right-arrow.png").pos(470, 480).addTo(ball);     
+        const nextLabel = new Label({
+            text: "The First One\n\nNext Level ",
+            size: 45,
+            color: black,
+            font: "pixel.ttf",
+            align: "center"
+        }).pos(350, 350).addTo(ball);
+  
+        ball.on("click", () => {
+            container.removeFrom();
+            overlayContainer.removeFrom();
+            lettersContainer.removeFrom();
+            part4();
+        });
     } else {
             // wrong
             const wrongLabel = new Label({
