@@ -10,7 +10,7 @@
 import zim from "https://zimjs.org/cdn/017/zim";
 
 const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png",
-"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png","ball.png","right-arrow.png"];
+"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png","ball.png","right-arrow.png","ballbg.png"];
 const path = "assets/";
 // See Docs under Frame for FIT, FILL, FULL, and TAG
 new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
@@ -424,7 +424,28 @@ const enterButton = new Button({
 
 //part4
 function part4(){
-
+    const container = new Container().addTo();
+        addBackground(container);
+        addDesk(container);
+        
+        //left side
+        const icon1 = new Pic("icon6.png").pos(80, 100).addTo(container).sca(0.04);
+        const icon2 = new Pic("icon1.png").pos(80, 220).addTo(container).sca(0.04);
+        const icon3 = new Pic("icon7.png").pos(80, 350).addTo(container).sca(0.04);
+        const icon4 = new Pic("icon2.png").pos(100, 470).addTo(container).sca(0.04);
+        const icon5 = new Pic("icon8.png").pos(180, 570).addTo(container).sca(0.05);
+        const icon6 = new Pic("icon3.png").pos(240, 120).addTo(container).sca(0.04);
+        const icon7 = new Pic("icon3.png").pos(200, 280).addTo(container).sca(0.04);
+        //right side
+        const icon8 = new Pic("icon3.png").pos(800, 90).addTo(container).sca(0.04);
+        const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
+        const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
+        
+        //click icon
+        icon6.on("click", () => {          
+                new Pic("ballbg.png").pos(700, 450).sca(.8).addTo(container);
+        });
+    
 
 
 
