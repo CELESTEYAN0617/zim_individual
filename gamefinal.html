@@ -10,7 +10,8 @@
 import zim from "https://zimjs.org/cdn/017/zim";
 
 const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png",
-"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png","ball.png","right-arrow.png","ballbg.png"];
+"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png",
+"ball.png","right-arrow.png","ballbg.png","puzzlebg.png","puzzle.png"];
 const path = "assets/";
 // See Docs under Frame for FIT, FILL, FULL, and TAG
 new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
@@ -145,9 +146,12 @@ function part1(){
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
         
         //click icon
-        icon9.on("click", () => {          
-                part3();
-        });
+        icon2.on("click", () => {          
+                
+            const puzzleFrame = new Pic("puzzlebg.png").pos(290, 110).addTo(container).sca(0.7);
+            
+
+             const puzzleImage = new Pic("puzzle.png").pos(314, 229.5).addTo(container).sca(1.41);
 
 
 
@@ -157,11 +161,7 @@ function part1(){
 
 
 
-
-
-
-
-
+   });
 }
 } // end ready
 
