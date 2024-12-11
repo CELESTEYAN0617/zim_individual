@@ -145,23 +145,95 @@ function part1(){
         const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
         
-        //click icon
-        icon2.on("click", () => {          
-                
-            const puzzleFrame = new Pic("puzzlebg.png").pos(290, 110).addTo(container).sca(0.7);
-            
+        
+    //click icon
+    icon2.on("click", () => {
+        const puzzleContainer = new Container().addTo(container);
+    // add the puzzle background frame
+    new Pic("puzzlebg.png").pos(290, 121).addTo(puzzleContainer).sca(0.67)   
 
-             const puzzleImage = new Pic("puzzle.png").pos(314, 229.5).addTo(container).sca(1.41);
-
-
-
-
-
-
-
+    new Rectangle({
+        width: 433,
+        height:433,
+        color: grey,
+    }).pos(312, 234).addTo(puzzleContainer);
 
 
-   });
+
+    // load the puzzle image
+    const puzzleImage = asset("puzzle.png").pos(290, 350).addTo(puzzleContainer); // upload the puzzle image
+
+    // set 3x3 puzzle
+    const gridSize = 3; 
+    const picture = new Scrambler(chop(puzzleImage, gridSize, gridSize)).center(puzzleContainer); // center the puzzle
+
+    // hide the original image
+    puzzleImage.removeFrom();
+
+    // listen the puzzle complete event
+    picture.on("complete", function () {
+        zog("Puzzle completed!");
+
+        // add the complete animation: rotate the image and move it to the bottom
+        const originalImage = puzzleImage.centerReg(container).sca(0.7).animate({
+            props: { rotation: 720 },
+            time: 3.5,
+            ease: "backInOut",
+            call: function () {
+                originalImage.bot().drag({ boundary: container, onTop: false });//move the image to the bottom
+            },
+        });
+
+        // remove the puzzle
+        puzzleContainer.removeFrom();
+        S.update();
+       
+        const overlayContainer = new Container().addTo(); // 添加到主舞台
+        // add a dark overlay
+            const darkOverlay = new Rectangle({
+            width: container.width, 
+            height: container.height,
+            color: "black",
+            alpha: 0 
+        }).addTo(overlayContainer);
+
+        darkOverlay.animate({
+            props: { alpha: 0.7 }, 
+            time: 1.5, 
+            });
+         // showing the ball
+        const ball = new Pic("ball.png").pos(290, 180).sca(.8).addTo(overlayContainer);
+        const rightArrow = new Pic("right-arrow.png").pos(470, 480).addTo(ball);     
+        const nextLabel = new Label({
+            text: "The Second One\n\nNext Level ",
+            size: 45,
+            color: black,
+            font: "pixel.ttf",
+            align: "center"
+        }).pos(350, 350).addTo(ball);
+  
+        ball.on("click", () => {              
+            container.removeFrom();
+            overlayContainer.removeFrom();
+            lettersContainer.removeFrom();
+            part1();
+            });    
+        });
+        
+
+
+        
+    
+
+    
+
+});
+
+
+
+
+
+   
 }
 } // end ready
 

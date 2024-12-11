@@ -570,6 +570,71 @@ button.on("click", () => {
 //function part5
 function part5(){
 
+    const container = new Container().addTo();
+        addBackground(container);
+        addDesk(container);
+        
+        //left side
+        const icon1 = new Pic("icon6.png").pos(80, 100).addTo(container).sca(0.04);
+        const icon2 = new Pic("icon1.png").pos(80, 220).addTo(container).sca(0.04);
+        const icon3 = new Pic("icon7.png").pos(80, 350).addTo(container).sca(0.04);
+        const icon4 = new Pic("icon2.png").pos(100, 470).addTo(container).sca(0.04);
+        const icon5 = new Pic("icon8.png").pos(180, 570).addTo(container).sca(0.05);
+        const icon6 = new Pic("icon3.png").pos(240, 120).addTo(container).sca(0.04);
+        const icon7 = new Pic("icon3.png").pos(200, 280).addTo(container).sca(0.04);
+        //right side
+        const icon8 = new Pic("icon3.png").pos(800, 90).addTo(container).sca(0.04);
+        const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
+        const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
+        
+        
+    //click icon
+    icon2.on("click", () => {
+        const puzzleContainer = new Container().addTo(container);
+    // add the puzzle background frame
+    new Pic("puzzlebg.png").pos(290, 121).addTo(puzzleContainer).sca(0.67)   
+
+    new Rectangle({
+        width: 433,
+        height:433,
+        color: grey,
+    }).pos(312, 234).addTo(puzzleContainer);
+
+
+
+    // load the puzzle image
+    const puzzleImage = asset("puzzle.png").pos(290, 350).addTo(puzzleContainer); // upload the puzzle image
+
+    // set 3x3 puzzle
+    const gridSize = 3; 
+    const picture = new Scrambler(chop(puzzleImage, gridSize, gridSize)).center(puzzleContainer); // center the puzzle
+
+    // hide the original image
+    puzzleImage.removeFrom();
+
+    // listen the puzzle complete event
+    picture.on("complete", function () {
+        zog("Puzzle completed!");
+
+        // add the complete animation: rotate the image and move it to the bottom
+        const originalImage = new Pic("puzzle.png").centerReg(container).sca(0.7).animate({
+            props: { rotation: 720 },
+            time: 3.5,
+            ease: "backInOut",
+            call: function () {
+                originalImage.bot().drag({ boundary: container, onTop: false });//move the image to the bottom
+            },
+        });
+
+        // remove the puzzle
+        puzzleContainer.removeFrom();
+        S.update();
+    });
+
+    // unpdate the container
+    S.update();
+    
+});
 
 
 
