@@ -588,53 +588,7 @@ function part5(){
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
         
         
-    //click icon
-    icon2.on("click", () => {
-        const puzzleContainer = new Container().addTo(container);
-    // add the puzzle background frame
-    new Pic("puzzlebg.png").pos(290, 121).addTo(puzzleContainer).sca(0.67)   
-
-    new Rectangle({
-        width: 433,
-        height:433,
-        color: grey,
-    }).pos(312, 234).addTo(puzzleContainer);
-
-
-
-    // load the puzzle image
-    const puzzleImage = asset("puzzle.png").pos(290, 350).addTo(puzzleContainer); // upload the puzzle image
-
-    // set 3x3 puzzle
-    const gridSize = 3; 
-    const picture = new Scrambler(chop(puzzleImage, gridSize, gridSize)).center(puzzleContainer); // center the puzzle
-
-    // hide the original image
-    puzzleImage.removeFrom();
-
-    // listen the puzzle complete event
-    picture.on("complete", function () {
-        zog("Puzzle completed!");
-
-        // add the complete animation: rotate the image and move it to the bottom
-        const originalImage = new Pic("puzzle.png").centerReg(container).sca(0.7).animate({
-            props: { rotation: 720 },
-            time: 3.5,
-            ease: "backInOut",
-            call: function () {
-                originalImage.bot().drag({ boundary: container, onTop: false });//move the image to the bottom
-            },
-        });
-
-        // remove the puzzle
-        puzzleContainer.removeFrom();
-        S.update();
-    });
-
-    // unpdate the container
-    S.update();
-    
-});
+   
 
 
 

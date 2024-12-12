@@ -173,60 +173,88 @@ function part1(){
     // listen the puzzle complete event
     picture.on("complete", function () {
         zog("Puzzle completed!");
+         
 
-        // add the complete animation: rotate the image and move it to the bottom
+        // add the complete animation
         const originalImage = puzzleImage.centerReg(container).sca(0.7).animate({
-            props: { rotation: 720 },
+            props: { 
+                rotation: 720,
+                scale: 0.7 
+            },
             time: 3.5,
             ease: "backInOut",
             call: function () {
-                originalImage.bot().drag({ boundary: container, onTop: false });//move the image to the bottom
+                originalImage.removeFrom();
+                // show the ball
+                const overlayContainer = new Container().addTo(); 
+
+                // add a dark overlay
+                const darkOverlay = new Rectangle({
+                    width: container.width, 
+                    height: container.height,
+                    color: "black",
+                    alpha: 0 
+                }).addTo(container);
+
+                darkOverlay.animate({
+                    props: { alpha: 0.7 }, 
+                    time: 1.5, 
+                });
+
+                // show the ball
+                const ball = new Pic("ball.png")
+                    .pos(250, 120)
+                    .sca(0.8)
+                    .addTo(overlayContainer)
+                    .animate({
+                        props: { scale: 1 },  
+                        time: 1,
+                        ease: "backOut"
+                    });
+
+                const nextLabel2 = new Label({
+                    text: "Restart",
+                    size: 35,
+                    color: black,
+                    font: "pixel.ttf",
+                    align: "center"
+                }).pos(340, 410).addTo(ball);
+
+                //add right arrow
+                const rightArrow = new Pic("right-arrow.png")
+                    .pos(485, 410)
+                    .addTo(ball);
+
+                //add next label
+                const nextLabel1 = new Label({
+                    text: "Congratulations!\n\nFind the ball!",
+                    size: 45,
+                    color: black,
+                    font: "pixel.ttf",
+                    align: "center"
+                }).pos(276, 285).addTo(ball);
+                
+                
+                
+                //click the ball to next level
+                ball.on("click", () => {              
+                    container.removeFrom();
+                    overlayContainer.removeFrom();
+                    part1();
+                });    
             },
         });
 
         // remove the puzzle
         puzzleContainer.removeFrom();
         S.update();
-       
-        const overlayContainer = new Container().addTo(); // 添加到主舞台
-        // add a dark overlay
-            const darkOverlay = new Rectangle({
-            width: container.width, 
-            height: container.height,
-            color: "black",
-            alpha: 0 
-        }).addTo(overlayContainer);
-
-        darkOverlay.animate({
-            props: { alpha: 0.7 }, 
-            time: 1.5, 
-            });
-         // showing the ball
-        const ball = new Pic("ball.png").pos(290, 180).sca(.8).addTo(overlayContainer);
-        const rightArrow = new Pic("right-arrow.png").pos(470, 480).addTo(ball);     
-        const nextLabel = new Label({
-            text: "The Second One\n\nNext Level ",
-            size: 45,
-            color: black,
-            font: "pixel.ttf",
-            align: "center"
-        }).pos(350, 350).addTo(ball);
-  
-        ball.on("click", () => {              
-            container.removeFrom();
-            overlayContainer.removeFrom();
-            lettersContainer.removeFrom();
-            part1();
-            });    
-        });
-        
+    });
 
 
-        
-    
 
-    
 
+
+   
 });
 
 
@@ -235,6 +263,8 @@ function part1(){
 
    
 }
+
+
 } // end ready
 
 </script>
