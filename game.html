@@ -11,8 +11,13 @@ import zim from "https://zimjs.org/cdn/017/zim";
 
 const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png",
 "icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png",
-"ball.png","right-arrow.png","ballbg.png","puzzlebg.png","puzzle.png"];
+"ball.png","right-arrow.png","ballbg.png","puzzlebg.png","puzzle.png",
+"bgmusic.mp3","Music.png","start.wav","key.wav","success.wav","wrong.mp3","press.wav","puzzle.wav","ball.wav"];
 const path = "assets/";
+
+let bgMusic; // global background music object
+
+
 // See Docs under Frame for FIT, FILL, FULL, and TAG
 new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
 function ready() {
@@ -163,8 +168,27 @@ function part1() {
         new Pic("assets/cat.png").pos(90, 120).sca(0.7).addTo(container);
 
         //add red ball
-        const redBall = new Circle(20, "red").pos(700, 450).addTo(container).drag();
-
+        const redBall = new Circle({radius:20, color:"red"})
+        .pos(200, 450).addTo(container)
+        .animate({
+            wait: .5,
+            props: {
+                x: String(660), 
+                rotation: 360 * 3.5,
+                color: pink
+            },
+            rewind: true,
+            loop: true,
+            rewindWait: 1,
+            loopWait: 1,
+            ease: "snapInOut",
+            time: 1.5,
+            call: () => {
+                redBall.color = "red";
+            }
+        });
+        S.update();
+        
         //add button container
         const buttonContainer = new Container().pos(360, 550).addTo(container);
 
@@ -177,7 +201,8 @@ function part1() {
             borderColor: "black",
             corner: 10,
         }).addTo(buttonContainer);
-
+        //add click sound
+        const click = new Aud("start.wav");
         //add button text
         const startLabel = new Label({
             text: "START",
@@ -205,6 +230,7 @@ function part1() {
 
      
     buttonContainer.on("click", () => {
+        click.play();
                 container.animate({
                     props: { alpha: 0 },
                     call: () => {
@@ -214,9 +240,33 @@ function part1() {
                     },
                 });
             });
+
+     // music button（global control）
+            const music = new Container().addTo(container);
+            const musicButton = new Rectangle({
+                width: 40,
+                height: 30,
+                color: white,
+                corner: 8,
+                borderWidth: 2,
+                borderColor: black,
+            })
+                .addTo(music)
+                .pos(420, 2);
+            
+
+            new Pic("Music.png").addTo(music).centerReg(music).sca(0.5);
+            
+            musicButton.on("mousedown",()=>{
+                if(!bgMusic){
+                    bgMusic=new Aud("bgmusic.mp3",.6, true).play({loop:true});
+                } else {
+                    bgMusic.paused = !bgMusic.paused;
+                }
+            });
    
     }              
-             
+    S.update();        
     
     //part2- game page
     function part2(){
@@ -237,16 +287,66 @@ function part1() {
         const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
         
+        const click = new Aud("start.wav");
         //click icon
-        icon9.on("click", () => {          
+        icon9.on("click", () => {    
+            click.play();
                 part3();
         });
+
+           // music button（global control）
+           const music = new Container().addTo(container);
+            const musicButton = new Rectangle({
+                width: 40,
+                height: 30,
+                color: white,
+                corner: 8,
+                borderWidth: 2,
+                borderColor: black,
+            })
+                .addTo(music)
+                .pos(420, 2);
+            
+
+            new Pic("Music.png").addTo(music).centerReg(music).sca(0.5);
+            
+            musicButton.on("mousedown",()=>{
+                if(!bgMusic){
+                    bgMusic=new Aud("bgmusic.mp3",.6, true).play({loop:true});
+                } else {
+                    bgMusic.paused = !bgMusic.paused;
+                }
+            });
     }
+    S.update();
 
 function part3(){
     const container = new Container().addTo();
     addBackground(container);
     addIcon(container);
+       // music button（global control）
+       const music = new Container().addTo(container);
+            const musicButton = new Rectangle({
+                width: 40,
+                height: 30,
+                color: white,
+                corner: 8,
+                borderWidth: 2,
+                borderColor: black,
+            })
+                .addTo(music)
+                .pos(420, 2);
+            
+
+            new Pic("Music.png").addTo(music).centerReg(music).sca(0.5);
+            
+            musicButton.on("mousedown",()=>{
+                if(!bgMusic){
+                    bgMusic=new Aud("bgmusic.mp3",.6, true).play({loop:true});
+                } else {
+                    bgMusic.paused = !bgMusic.paused;
+                }
+            });
 
     const backgroundF = new Pic("red.png").pos(140,200).addTo(container).sca(.3);
     new Label({
@@ -337,9 +437,11 @@ const correctSequence = "RED";
                 corner: 5,
                 align: "center"
             }).pos(x-14, y-3).addTo(container).alp(0.01);
-
+            //add click sound
+            const keyMusic = new Aud("key.wav");
             // click event
             button.on("click", () => {
+                keyMusic.play();
                 zog(`Clicked: ${char}`);
 
                 // add the clicked letter to the display text
@@ -364,12 +466,17 @@ const enterButton = new Button({
         corner: 5,
         align: "center"
     }).pos(780, 460).addTo(container).alp(0.01);
+    
+    const success = new Aud("success.wav");
+    const wrong = new Aud("wrong.mp3");
 
+    const enterMusic = new Aud("key.wav");
     // Enter event
     enterButton.on("click", () => {
+        enterMusic.play();
     if (currentDisplay === correctSequence) {
-           
-            const overlayContainer = new Container().addTo(); // 添加到主舞台
+           success.play();
+            const overlayContainer = new Container().addTo(); 
         // add a dark overlay
             const darkOverlay = new Rectangle({
             width: container.width, 
@@ -383,6 +490,7 @@ const enterButton = new Button({
             time: 1.5, 
             });
 
+        const ballSound = new Aud("ball.wav");
         // showing the ball
         const ball = new Pic("ball.png").pos(290, 180).sca(.8).addTo(overlayContainer);
         const rightArrow = new Pic("right-arrow.png").pos(470, 480).addTo(ball);     
@@ -395,13 +503,20 @@ const enterButton = new Button({
         }).pos(350, 350).addTo(ball);
   
         ball.on("click", () => {
-            container.removeFrom();
-            overlayContainer.removeFrom();
-            lettersContainer.removeFrom();
-            part4();
+            ballSound.play();
+            container.animate({
+                props: { alpha: 0 },
+                call: () => {
+                    container.removeFrom();
+                    overlayContainer.removeFrom();
+                    lettersContainer.removeFrom();
+                    part4();
+                }
+            });
         });
     } else {
             // wrong
+            wrong.play();
             const wrongLabel = new Label({
                 text: "Wrong! Please Try Again!",
                 size: 30,
@@ -422,12 +537,35 @@ const enterButton = new Button({
             
 }
  
-
+S.update();
 //part4
 function part4(){
     const container = new Container().addTo();
         addBackground(container);
         addDesk(container);
+           // music button（global control）
+           const music = new Container().addTo(container);
+            const musicButton = new Rectangle({
+                width: 40,
+                height: 30,
+                color: white,
+                corner: 8,
+                borderWidth: 2,
+                borderColor: black,
+            })
+                .addTo(music)
+                .pos(420, 2);
+            
+
+            new Pic("Music.png").addTo(music).centerReg(music).sca(0.5);
+            
+            musicButton.on("mousedown",()=>{
+                if(!bgMusic){
+                    bgMusic=new Aud("bgmusic.mp3",.6, true).play({loop:true});
+                } else {
+                    bgMusic.paused = !bgMusic.paused;
+                }
+            });
         
         //left side
         const icon1 = new Pic("icon6.png").pos(80, 100).addTo(container).sca(0.04);
@@ -442,8 +580,10 @@ function part4(){
         const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
         
+        const click = new Aud("start.wav");
         //click icon
-        icon1.on("click", () => {          
+        icon1.on("click", () => { 
+            click.play();
         const ballbg = new Pic("ballbg.png").pos(200, 180).sca(.6).addTo(container);
         
         
@@ -461,11 +601,11 @@ function part4(){
 
         const boundary = new Rectangle({
             width:695, 
-            height: 498, 
+            height: 454, 
             color: "rgba(173, 187, 255, 1)",
             borderColor: "black", 
             borderWidth: 5,
-        }).pos(220, 254).addTo(ballbg).alp(1); // 
+        }).pos(225, 248).addTo(ballbg).alp(1); // 
 
         // ball
     const ball = new Circle({
@@ -484,13 +624,16 @@ function part4(){
         time: .5, 
         loop: true, 
     });
-
+const press=new Aud("press.wav");
  // click event
 button.on("click", () => {
+    // Play press sound first
+    press.play();
+    
     // stop animation
     ball.stopAnimate();
-
-    // get ball edge
+    
+    // Ensure the ball stays at its current position
     const ballLeftEdge = ball.x - 20; 
     const ballRightEdge = ball.x + 20; 
 
@@ -498,13 +641,20 @@ button.on("click", () => {
     const boundaryXStart = 240; 
     const boundaryXEnd = 935; 
 
+
+    timeout(.8,()=>{
+    //add success and wrong sound
+    const success = new Aud("success.wav");
+    const wrong = new Aud("wrong.mp3");
+
     // define success or not
     if (ballLeftEdge >= boundaryXStart && ballRightEdge <= boundaryXEnd) {
         zog("Congratulations! The ball is within the boundary.");
-
+        // Play success sound after press sound
+        success.play();
         // success
 
-        const overlayContainer = new Container().addTo(); // 添加到主舞台
+        const overlayContainer = new Container().addTo(); 
         // add a dark overlay
             const darkOverlay = new Rectangle({
             width: container.width, 
@@ -528,21 +678,26 @@ button.on("click", () => {
             align: "center"
         }).pos(350, 350).addTo(ball);
   
+        const ballSound = new Aud("ball.wav");
         ball.on("click", () => {
+            ballSound.play();
+            container.animate({
+                props: { alpha: 0 },
+                call: () => {
+                    container.removeFrom();
+                    overlayContainer.removeFrom();
+                   part5();
+            
+                }
+            });
                
-            container.removeFrom();
-            overlayContainer.removeFrom();
-            
-            part5();
-            
-
         });
 
 
 
     } else {
         zog("Try again! The ball is outside the boundary.");
-        
+        wrong.play();
         // reset
         ball.pos(915, 400); 
         ball.animate({
@@ -565,16 +720,40 @@ button.on("click", () => {
             });
     }
 });
+        });
 });
 
 }
+S.update();
 //function part5
 function part5(){
 
     const container = new Container().addTo();
         addBackground(container);
         addDesk(container);
-        
+           // music button（global control）
+           const music = new Container().addTo(container);
+            const musicButton = new Rectangle({
+                width: 40,
+                height: 30,
+                color: white,
+                corner: 8,
+                borderWidth: 2,
+                borderColor: black,
+            })
+                .addTo(music)
+                .pos(420, 2);
+            
+
+            new Pic("Music.png").addTo(music).centerReg(music).sca(0.5);
+            
+            musicButton.on("mousedown",()=>{
+                if(!bgMusic){
+                    bgMusic=new Aud("bgmusic.mp3",.6, true).play({loop:true});
+                } else {
+                    bgMusic.paused = !bgMusic.paused;
+                }
+            });
         //left side
         const icon1 = new Pic("icon6.png").pos(80, 100).addTo(container).sca(0.04);
         const icon2 = new Pic("icon1.png").pos(80, 220).addTo(container).sca(0.04);
@@ -588,7 +767,10 @@ function part5(){
         const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
           //click icon
+          const click = new Aud("start.wav");
+
     icon2.on("click", () => {
+        click.play();
         const puzzleContainer = new Container().addTo(container);
     // add the puzzle background frame
     new Pic("puzzlebg.png").pos(290, 121).addTo(puzzleContainer).sca(0.67)   
@@ -603,18 +785,19 @@ function part5(){
 
     // load the puzzle image
     const puzzleImage = asset("puzzle.png").pos(290, 350).addTo(puzzleContainer); // upload the puzzle image
-
+    
     // set 3x3 puzzle
-    const gridSize = 3; 
+    const gridSize = 4; 
     const picture = new Scrambler(chop(puzzleImage, gridSize, gridSize)).center(puzzleContainer); // center the puzzle
-
+    
     // hide the original image
     puzzleImage.removeFrom();
 
+    const success = new Aud("success.wav");
     // listen the puzzle complete event
     picture.on("complete", function () {
         zog("Puzzle completed!");
-         
+        success.play();
 
         // add the complete animation
         const originalImage = puzzleImage.centerReg(container).sca(0.7).animate({
@@ -625,6 +808,7 @@ function part5(){
             time: 3.5,
             ease: "backInOut",
             call: function () {
+                
                 originalImage.removeFrom();
                 // show the ball
                 const overlayContainer = new Container().addTo(); 
@@ -642,10 +826,15 @@ function part5(){
                     time: 1.5, 
                 });
 
+                const emitter = new Emitter({
+                    obj: new Circle(50, [blue, green, pink]),
+                    force: { min: 2, max: 10 },
+                    gravity: 0
+                }).center(overlayContainer).pos(250, 200); 
                 // show the ball
                 const ball = new Pic("ball.png")
                     .pos(250, 120)
-                    .sca(0.8)
+                    .sca(0.7)
                     .addTo(overlayContainer)
                     .animate({
                         props: { scale: 1 },  
@@ -659,11 +848,11 @@ function part5(){
                     color: black,
                     font: "pixel.ttf",
                     align: "center"
-                }).pos(340, 410).addTo(ball);
+                }).pos(325, 380).addTo(ball);
 
                 //add right arrow
                 const rightArrow = new Pic("right-arrow.png")
-                    .pos(485, 410)
+                    .pos(470, 380)
                     .addTo(ball);
 
                 //add next label
@@ -673,15 +862,21 @@ function part5(){
                     color: black,
                     font: "pixel.ttf",
                     align: "center"
-                }).pos(276, 285).addTo(ball);
+                }).pos(251, 265).addTo(ball);
                 
                 
-                
+                const ballSound = new Aud("ball.wav");
                 //click the ball to next level
-                ball.on("click", () => {              
-                    container.removeFrom();
-                    overlayContainer.removeFrom();
-                    part1();
+                ball.on("click", () => { 
+                    ballSound.play();
+                    container.animate({
+                        props: { alpha: 0 },
+                        call: () => {
+                            container.removeFrom();
+                            overlayContainer.removeFrom();
+                            part1();
+                        }
+                    });
                 });    
             },
         });
@@ -695,13 +890,7 @@ function part5(){
 });
 
 
-
-
-
-   
 }
-
-
 
 } // end ready
 
