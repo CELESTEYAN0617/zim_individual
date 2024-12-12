@@ -10,7 +10,8 @@
 import zim from "https://zimjs.org/cdn/017/zim";
 
 const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.png",
-"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png","ball.png","right-arrow.png","ballbg.png"];
+"icon4.png","icon5.png","icon6.png","icon7.png","icon8.png","exit1.png","exit2.png",
+"ball.png","right-arrow.png","ballbg.png","puzzlebg.png","puzzle.png"];
 const path = "assets/";
 // See Docs under Frame for FIT, FILL, FULL, and TAG
 new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
@@ -531,7 +532,7 @@ button.on("click", () => {
                
             container.removeFrom();
             overlayContainer.removeFrom();
-            lettersContainer.removeFrom();
+            
             part5();
             
 
@@ -586,13 +587,120 @@ function part5(){
         const icon8 = new Pic("icon3.png").pos(800, 90).addTo(container).sca(0.04);
         const icon9 = new Pic("icon4.png").pos(740, 220).addTo(container).sca(0.06);
         const icon10 = new Pic("icon5.png").pos(850, 205).addTo(container).sca(0.04);
-        
-        
+          //click icon
+    icon2.on("click", () => {
+        const puzzleContainer = new Container().addTo(container);
+    // add the puzzle background frame
+    new Pic("puzzlebg.png").pos(290, 121).addTo(puzzleContainer).sca(0.67)   
+
+    new Rectangle({
+        width: 433,
+        height:433,
+        color: grey,
+    }).pos(312, 234).addTo(puzzleContainer);
+
+
+
+    // load the puzzle image
+    const puzzleImage = asset("puzzle.png").pos(290, 350).addTo(puzzleContainer); // upload the puzzle image
+
+    // set 3x3 puzzle
+    const gridSize = 3; 
+    const picture = new Scrambler(chop(puzzleImage, gridSize, gridSize)).center(puzzleContainer); // center the puzzle
+
+    // hide the original image
+    puzzleImage.removeFrom();
+
+    // listen the puzzle complete event
+    picture.on("complete", function () {
+        zog("Puzzle completed!");
+         
+
+        // add the complete animation
+        const originalImage = puzzleImage.centerReg(container).sca(0.7).animate({
+            props: { 
+                rotation: 720,
+                scale: 0.7 
+            },
+            time: 3.5,
+            ease: "backInOut",
+            call: function () {
+                originalImage.removeFrom();
+                // show the ball
+                const overlayContainer = new Container().addTo(); 
+
+                // add a dark overlay
+                const darkOverlay = new Rectangle({
+                    width: container.width, 
+                    height: container.height,
+                    color: "black",
+                    alpha: 0 
+                }).addTo(container);
+
+                darkOverlay.animate({
+                    props: { alpha: 0.7 }, 
+                    time: 1.5, 
+                });
+
+                // show the ball
+                const ball = new Pic("ball.png")
+                    .pos(250, 120)
+                    .sca(0.8)
+                    .addTo(overlayContainer)
+                    .animate({
+                        props: { scale: 1 },  
+                        time: 1,
+                        ease: "backOut"
+                    });
+
+                const nextLabel2 = new Label({
+                    text: "Restart",
+                    size: 35,
+                    color: black,
+                    font: "pixel.ttf",
+                    align: "center"
+                }).pos(340, 410).addTo(ball);
+
+                //add right arrow
+                const rightArrow = new Pic("right-arrow.png")
+                    .pos(485, 410)
+                    .addTo(ball);
+
+                //add next label
+                const nextLabel1 = new Label({
+                    text: "Congratulations!\n\nFind the ball!",
+                    size: 45,
+                    color: black,
+                    font: "pixel.ttf",
+                    align: "center"
+                }).pos(276, 285).addTo(ball);
+                
+                
+                
+                //click the ball to next level
+                ball.on("click", () => {              
+                    container.removeFrom();
+                    overlayContainer.removeFrom();
+                    part1();
+                });    
+            },
+        });
+
+        // remove the puzzle
+        puzzleContainer.removeFrom();
+        S.update();
+    });
+
    
+});
 
 
 
-} 
+
+
+   
+}
+
 
 
 } // end ready
