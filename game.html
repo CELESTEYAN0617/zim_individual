@@ -4,6 +4,93 @@
 <meta charset="utf-8" />
 <title>Find the ball</title>
 
+<!-- full screen style -->
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+    }
+    
+    #fullscreen-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid #333;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    #fullscreen-btn:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: scale(1.05);
+    }
+    
+    #fullscreen-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .fullscreen {
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+</style>
+
+<!-- full screen -->
+<script>
+// full screen
+function toggleFullscreen() {
+    const canvas = document.querySelector('canvas');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    
+    if (!document.fullscreenElement) {
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) {
+            canvas.webkitRequestFullscreen();
+        } else if (canvas.msRequestFullscreen) {
+            canvas.msRequestFullscreen();
+        }
+        fullscreenBtn.textContent = 'exit full screen';
+        document.body.classList.add('fullscreen');
+    } else {
+
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+        fullscreenBtn.textContent = 'full screen';
+        document.body.classList.remove('fullscreen');
+    }
+}
+
+// listen the full screen status change
+document.addEventListener('fullscreenchange', updateFullscreenButton);
+document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+document.addEventListener('msfullscreenchange', updateFullscreenButton);
+
+function updateFullscreenButton() {
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    if (document.fullscreenElement) {
+        fullscreenBtn.textContent = 'exit full screen';
+        document.body.classList.add('fullscreen');
+    } else {
+        fullscreenBtn.textContent = 'full screen';
+        document.body.classList.remove('fullscreen');
+    }
+}
+</script>
+
 <!-- zimjs.com - JavaScript Canvas Framework -->
 <script type="module">
 
@@ -16,7 +103,6 @@ const assets = ["cat.png","bg.png","pixel.ttf","icon1.png","icon2.png","icon3.pn
 const path = "assets/";
 
 let bgMusic; // global background music object
-
 
 // See Docs under Frame for FIT, FILL, FULL, and TAG
 new Frame(FIT, 1024, 768, light, dark, ready, assets, path);
@@ -897,5 +983,8 @@ function part5(){
 </script>
 <meta name="viewport" content="width=device-width, user-scalable=no" />
 </head>
-<body></body>
-</html>
+<body>
+    <!-- full screen switch button -->
+    <button id="fullscreen-btn" onclick="toggleFullscreen()">full screen</button>
+</body>
+</html> 
